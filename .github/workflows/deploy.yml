@@ -1,0 +1,32 @@
+name: Deploy
+
+on: [ push ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js latest
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run the tests
+        run: npm test
+
+      - name: Build
+        env:
+          REACT_APP_PUBLIC_URL:  https://paszin.github.io/meta-tic-tac-toe
+        run: npm run build
+
+      - name: deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.2
+        with:
+          branch: gh-pages
+          folder: build
